@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tubo de Kundt · Simulador 1D</title>
+<meta name="description" content="Simulador interactivo de tubo de Kundt (tubo de impedancia) — presión, velocidad de partícula y campo de presión en color, 1D.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <header class="nameplate">
+    <div class="nameplate-id">
+      <span class="tag">TK·1D</span>
+      <div class="titleblock">
+        <h1>Tubo de Kundt</h1>
+        <p class="subtitle">Analizador de campo acústico — presión, velocidad y color de fase</p>
+      </div>
+    </div>
+    <dl class="readouts">
+      <div class="readout">
+        <dt>|Γ|</dt>
+        <dd id="gammaReadout">0.000</dd>
+      </div>
+      <div class="readout">
+        <dt>λ</dt>
+        <dd id="lambdaReadout">0.00 m</dd>
+      </div>
+      <div class="readout">
+        <dt>f</dt>
+        <dd id="freqReadoutTop">200 Hz</dd>
+      </div>
+    </dl>
+  </header>
+
+  <main class="stage">
+
+    <section class="hero-card" aria-label="Vista del tubo con campo de presión">
+      <div class="hero-canvas-wrap">
+        <canvas id="tubeCanvas"></canvas>
+      </div>
+      <div class="colorbar-wrap">
+        <canvas id="colorbarCanvas"></canvas>
+        <div class="colorbar-labels">
+          <span id="colorbarTop">+</span>
+          <span id="colorbarMid">0</span>
+          <span id="colorbarBottom">–</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="charts-row">
+      <div class="chart-card">
+        <div class="chart-head">
+          <span class="chart-label">Presión</span>
+          <span class="chart-unit">dB</span>
+        </div>
+        <canvas id="pressureCanvas"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-head">
+          <span class="chart-label">Velocidad de partícula</span>
+          <span class="chart-unit">normalizada</span>
+        </div>
+        <canvas id="velocityCanvas"></canvas>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="controlpanel">
+
+    <div class="control">
+      <div class="control-label-row">
+        <label for="freqSlider">Frecuencia</label>
+        <output id="freqValue" class="lcd">200 Hz</output>
+      </div>
+      <input type="range" id="freqSlider" min="50" max="800" step="1" value="200">
+    </div>
+
+    <div class="control">
+      <div class="control-label-row">
+        <label for="rSlider">Resistencia R</label>
+        <output id="rValue" class="lcd">2000 rayl</output>
+      </div>
+      <input type="range" id="rSlider" min="10" max="5000" step="10" value="2000">
+    </div>
+
+    <div class="control">
+      <div class="control-label-row">
+        <label for="mSlider">Masa M</label>
+        <output id="mValue" class="lcd">0.0010 kg/m⁴</output>
+      </div>
+      <input type="range" id="mSlider" min="0.001" max="0.5" step="0.001" value="0.001">
+    </div>
+
+    <div class="control-aux">
+
+      <div class="segmented" role="radiogroup" aria-label="Modo de color">
+        <button type="button" id="modeDiverging" class="seg-btn active" role="radio" aria-checked="true">Divergente</button>
+        <button type="button" id="modeSequential" class="seg-btn" role="radio" aria-checked="false">Mapa de calor</button>
+      </div>
+
+      <label class="checkbox">
+        <input type="checkbox" id="nodesCheckbox">
+        <span>Nodos de presión</span>
+      </label>
+
+      <button type="button" id="playBtn" class="play-btn">
+        <svg id="playIcon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <span id="playLabel">Reproducir</span>
+      </button>
+
+    </div>
+
+  </footer>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
