@@ -520,20 +520,56 @@ function setPlaying(playing) {
    ========================================================================== */
 el.freqSlider.addEventListener('input', () => {
   state.f = Number(el.freqSlider.value);
-  el.freqValue.textContent = `${state.f} Hz`;
+  el.freqValue.value = state.f;
   fullUpdate();
+});
+el.freqValue.addEventListener('input', () => {
+  const raw = el.freqValue.value.trim();
+  const v = Number(raw);
+  if (raw !== '' && Number.isFinite(v)) {
+    state.f = clamp(v, Number(el.freqSlider.min), Number(el.freqSlider.max));
+    el.freqSlider.value = state.f;
+    fullUpdate();
+  }
+});
+el.freqValue.addEventListener('change', () => {
+  el.freqValue.value = state.f; // normaliza el texto al perder el foco (vacío, fuera de rango, etc.)
 });
 
 el.rSlider.addEventListener('input', () => {
   state.R = Number(el.rSlider.value);
-  el.rValue.textContent = `${state.R} rayl`;
+  el.rValue.value = state.R;
   fullUpdate();
+});
+el.rValue.addEventListener('input', () => {
+  const raw = el.rValue.value.trim();
+  const v = Number(raw);
+  if (raw !== '' && Number.isFinite(v)) {
+    state.R = clamp(v, Number(el.rSlider.min), Number(el.rSlider.max));
+    el.rSlider.value = state.R;
+    fullUpdate();
+  }
+});
+el.rValue.addEventListener('change', () => {
+  el.rValue.value = state.R;
 });
 
 el.mSlider.addEventListener('input', () => {
   state.M = Number(el.mSlider.value);
-  el.mValue.textContent = `${state.M.toFixed(4)} kg/m⁴`;
+  el.mValue.value = state.M.toFixed(4);
   fullUpdate();
+});
+el.mValue.addEventListener('input', () => {
+  const raw = el.mValue.value.trim();
+  const v = Number(raw);
+  if (raw !== '' && Number.isFinite(v)) {
+    state.M = clamp(v, Number(el.mSlider.min), Number(el.mSlider.max));
+    el.mSlider.value = state.M;
+    fullUpdate();
+  }
+});
+el.mValue.addEventListener('change', () => {
+  el.mValue.value = state.M.toFixed(4);
 });
 
 el.nodesCheckbox.addEventListener('change', () => {

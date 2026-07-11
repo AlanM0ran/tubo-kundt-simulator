@@ -251,15 +251,49 @@ body {
   color: var(--ink-dim);
 }
 
-.lcd {
-  font-family: var(--font-display);
-  font-size: 13px;
-  color: var(--amber);
+.lcd-input-wrap {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
   background: #0e1114;
   border: 1px solid var(--line);
   border-radius: 4px;
   padding: 2px 7px;
+}
+
+.lcd-input-wrap:focus-within {
+  border-color: var(--amber);
+}
+
+.lcd-input {
+  font-family: var(--font-display);
+  font-size: 13px;
+  color: var(--amber);
+  background: transparent;
+  border: none;
+  padding: 0;
+  width: 4.6em;
+  text-align: right;
   font-variant-numeric: tabular-nums;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.lcd-input:focus {
+  outline: none;
+  color: var(--ink);
+}
+
+.lcd-input::-webkit-inner-spin-button,
+.lcd-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.lcd-unit {
+  font-family: var(--font-display);
+  font-size: 11.5px;
+  color: var(--ink-dim);
   white-space: nowrap;
 }
 
@@ -294,7 +328,7 @@ input[type="range"]::-webkit-slider-runnable-track {
   height: 4px;
   border-radius: 2px;
   background:
-    repeating-linear-gradient(to right, var(--line) 0 1px, transparent 1px transparent calc(5% - 1px)),
+    repeating-linear-gradient(to right, var(--line) 0 1px, transparent 1px 5%),
     var(--panel-raised);
 }
 
@@ -312,7 +346,9 @@ input[type="range"]::-webkit-slider-thumb {
 input[type="range"]::-moz-range-track {
   height: 4px;
   border-radius: 2px;
-  background: var(--panel-raised);
+  background:
+    repeating-linear-gradient(to right, var(--line) 0 1px, transparent 1px 5%),
+    var(--panel-raised);
 }
 
 input[type="range"]::-moz-range-progress {
@@ -408,6 +444,84 @@ input[type="range"]::-moz-range-thumb {
   border: 1px solid var(--line);
 }
 
+/* ---------- Sección explicativa (fundamento teórico) ---------- */
+
+.explainer {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  padding: 22px 26px 26px;
+}
+
+.explainer-eyebrow {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--bg);
+  background: var(--teal);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.explainer h2 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 24px 0 8px;
+  color: var(--ink);
+}
+
+.explainer > h2:first-of-type {
+  margin-top: 2px;
+}
+
+.explainer p {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--ink-dim);
+  margin: 0 0 10px;
+  max-width: 76ch;
+}
+
+.explainer p strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.eq-block {
+  background: #0e1114;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-s);
+  padding: 14px 18px;
+  margin: 10px 0 6px;
+  overflow-x: auto;
+  color: var(--ink);
+}
+
+.eq-block .katex { font-size: 1.02em; }
+.eq-block .katex-display { margin: 4px 0; }
+
+.eq-note {
+  font-size: 12px;
+  color: var(--ink-dim);
+  margin: 0 0 16px;
+}
+
+.explainer-refs {
+  font-size: 12px;
+  color: var(--ink-dim);
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  line-height: 1.7;
+}
+
+.explainer-refs a {
+  color: var(--teal);
+}
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 760px) {
@@ -420,6 +534,9 @@ input[type="range"]::-moz-range-thumb {
   .colorbar-wrap { width: 100%; height: 32px; padding: 0 8px; }
   #colorbarCanvas { width: 100%; height: 18px; }
   .colorbar-labels { top: 0; bottom: 0; left: 8px; right: 8px; flex-direction: row; }
+  .explainer { padding: 18px 16px 20px; }
+  .eq-block { padding: 12px; }
+  .eq-block .katex { font-size: 0.88em; }
 }
 
 @media (prefers-reduced-motion: reduce) {

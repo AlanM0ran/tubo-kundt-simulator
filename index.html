@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tubo de Kundt · Simulador 1D</title>
-<meta name="description" content="Simulador interactivo de tubo de Kundt (tubo de impedancia) — presión, velocidad de partícula y campo de presión en color, 1D.">
+<title>ImpedanZ · Simulador de tubo de Kundt</title>
+<meta name="description" content="ImpedanZ — simulador interactivo de tubo de Kundt (tubo de impedancia): presión, velocidad de partícula, coeficiente de reflexión y coeficiente de absorción, 1D.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -17,10 +18,10 @@
 
   <header class="nameplate">
     <div class="nameplate-id">
-      <span class="tag">TK·1D</span>
+      <span class="tag">IZ·1D</span>
       <div class="titleblock">
-        <h1>Tubo de Kundt</h1>
-        <p class="subtitle">Analizador de campo acústico — presión, velocidad y color de fase</p>
+        <h1>ImpedanZ</h1>
+        <p class="subtitle">Tubo de Kundt 1D · presión, velocidad y coeficiente de reflexión en tiempo real</p>
       </div>
     </div>
     <dl class="readouts">
@@ -79,7 +80,10 @@
     <div class="control">
       <div class="control-label-row">
         <label for="freqSlider">Frecuencia</label>
-        <output id="freqValue" class="lcd">200 Hz</output>
+        <div class="lcd-input-wrap">
+          <input type="number" id="freqValue" class="lcd-input" min="50" max="800" step="1" value="200" inputmode="numeric" aria-label="Frecuencia en hercios">
+          <span class="lcd-unit">Hz</span>
+        </div>
       </div>
       <input type="range" id="freqSlider" min="50" max="800" step="1" value="200">
     </div>
@@ -87,7 +91,10 @@
     <div class="control">
       <div class="control-label-row">
         <label for="rSlider">Resistencia R</label>
-        <output id="rValue" class="lcd">2000 rayl</output>
+        <div class="lcd-input-wrap">
+          <input type="number" id="rValue" class="lcd-input" min="10" max="5000" step="10" value="2000" inputmode="numeric" aria-label="Resistencia R en rayl">
+          <span class="lcd-unit">rayl</span>
+        </div>
       </div>
       <input type="range" id="rSlider" min="10" max="5000" step="10" value="2000">
     </div>
@@ -95,7 +102,10 @@
     <div class="control">
       <div class="control-label-row">
         <label for="mSlider">Masa M</label>
-        <output id="mValue" class="lcd">0.0010 kg/m⁴</output>
+        <div class="lcd-input-wrap">
+          <input type="number" id="mValue" class="lcd-input" min="0.001" max="0.5" step="0.001" value="0.001" inputmode="decimal" aria-label="Masa M en kilogramos por metro a la cuarta">
+          <span class="lcd-unit">kg/m⁴</span>
+        </div>
       </div>
       <input type="range" id="mSlider" min="0.001" max="0.5" step="0.001" value="0.001">
     </div>
@@ -121,8 +131,100 @@
 
   </footer>
 
+  <section class="explainer" id="explainer" aria-label="Fundamento físico y aplicación en mediciones">
+    <span class="explainer-eyebrow">FUNDAMENTOS</span>
+
+    <h2>¿Qué se está simulando?</h2>
+    <p>
+      Un tubo de impedancia (tubo de Kundt) en 1D: una fuente ubicada en un extremo emite
+      una onda plana senoidal que viaja hacia una muestra de material montada en el extremo
+      opuesto. La muestra se modela como una impedancia mecánica —una resistencia
+      <strong>R</strong> más una reactancia de masa asociada a <strong>M</strong>— que
+      refleja una fracción de la energía incidente. La superposición de la onda incidente
+      con la reflejada arma el patrón de onda estacionaria que se ve en el tubo: máximos y
+      mínimos de presión cuya posición y contraste dependen de la frecuencia y de las
+      propiedades de la muestra.
+    </p>
+
+    <h2>Ecuaciones que se resuelven</h2>
+    <p>El campo de presión <strong>p(x,t)</strong> satisface la ecuación de onda 1D:</p>
+    <div class="eq-block">$$\frac{\partial^2 p}{\partial x^2} = \frac{1}{c^2}\,\frac{\partial^2 p}{\partial t^2}$$</div>
+
+    <p>
+      Para una excitación senoidal de frecuencia angular ω, escribiendo
+      p(x,t) = Re[P(x)·e<sup>jωt</sup>], la ecuación de onda se reduce a la ecuación de
+      Helmholtz:
+    </p>
+    <div class="eq-block">$$\frac{d^2 P}{dx^2} + k^2 P = 0\, ,\qquad k=\frac{\omega}{c}=\frac{2\pi f}{c}$$</div>
+
+    <p>
+      Su solución general es la superposición de una onda incidente (fuente → muestra) y
+      una reflejada (muestra → fuente), referenciadas en el plano x&nbsp;=&nbsp;0:
+    </p>
+    <div class="eq-block">$$P(x) = e^{-jkx} + \Gamma\,e^{+jkx}$$</div>
+    <p class="eq-note">Γ es el coeficiente de reflexión: un número complejo que depende de f, R y M.</p>
+
+    <p>
+      La velocidad de partícula —de donde sale el desplazamiento animado de cada
+      partícula— se obtiene de la ecuación de Euler (conservación de cantidad de
+      movimiento), que vincula presión y velocidad:
+    </p>
+    <div class="eq-block">$$\rho_0\,\frac{\partial u}{\partial t} = -\,\frac{\partial p}{\partial x}$$</div>
+
+    <p>
+      Γ queda determinado por el contraste de impedancia entre el aire y la muestra. Esta
+      se modela como una resistencia pura más una masa acústica, sin rigidez:
+    </p>
+    <div class="eq-block">$$Z_L = R + j\,\omega M$$</div>
+    <div class="eq-block">$$\Gamma = \frac{Z_L - Z_0}{Z_L + Z_0}\, ,\qquad Z_0=\rho_0\, c$$</div>
+    <p class="eq-note">Aire: ρ₀ ≈ 1.21 kg/m³, c ≈ 343 m/s → Z₀ ≈ 415 rayl (los valores que usa el simulador).</p>
+
+    <h2>Para qué sirve: coeficiente de absorción</h2>
+    <p>
+      Este es el principio físico detrás de la medición normalizada del coeficiente de
+      absorción con tubo de impedancia. Del coeficiente de reflexión se obtiene
+      directamente:
+    </p>
+    <div class="eq-block">$$\alpha = 1-|\Gamma|^2$$</div>
+    <p>
+      El método clásico por relación de onda estacionaria (<strong>ISO 10534-1</strong>)
+      barre la frecuencia con un tono puro y ubica los máximos y mínimos de presión con un
+      micrófono sonda: de la relación S&nbsp;=&nbsp;p<sub>máx</sub>/p<sub>mín</sub> se obtiene
+      el módulo de Γ, y de la posición del primer mínimo respecto de la muestra, su fase.
+    </p>
+    <div class="eq-block">$$S=\frac{p_{\text{max}}}{p_{\text{min}}}\geq 1\, ,\qquad |\Gamma|=\frac{S-1}{S+1}$$</div>
+    <div class="eq-block">$$\alpha=\frac{4S}{(S+1)^2}$$</div>
+    <p>
+      Es exactamente el patrón que este simulador dibuja en tiempo real al mover los
+      controles. El método moderno (<strong>ISO 10534-2:2023</strong>, técnica de dos
+      micrófonos) reemplaza el barrido mecánico por el cálculo de la función de
+      transferencia entre dos micrófonos fijos —mucho más rápido— pero mide la misma
+      cantidad física: el coeficiente de reflexión complejo Γ(f), del que se deriva α(f) en
+      toda la banda de interés de una sola vez.
+    </p>
+
+    <p class="explainer-refs">
+      ISO 10534-1:1996 — Método de relación de onda estacionaria · ISO 10534-2:2023 —
+      Técnica de dos micrófonos. Ambas partes de la norma cubren la determinación del
+      coeficiente de absorción sonora, el factor de reflexión y la impedancia superficial
+      para incidencia normal.
+    </p>
+  </section>
+
 </div>
 
 <script src="script.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<script defer>
+  window.addEventListener('load', function () {
+    if (window.renderMathInElement) {
+      renderMathInElement(document.getElementById('explainer'), {
+        delimiters: [{ left: '$$', right: '$$', display: true }],
+        throwOnError: false
+      });
+    }
+  });
+</script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-# Tubo de Kundt — Simulador 1D (versión web estática)
+# ImpedanZ — Simulador 1D de tubo de Kundt (versión web estática)
 
 Reimplementación del simulador de tubo de Kundt (antes en Streamlit) como sitio
 estático HTML + CSS + JS puro, pensado para desplegarse directamente en Vercel,
@@ -65,6 +65,32 @@ paralelo, pero no los necesitás para Vercel.
   controles con estética de instrumento de laboratorio (paneles, LCD de
   lectura, sliders con marcas de calibración).
 - Botón único "Reproducir/Pausar" (antes dos botones separados).
+
+## Segunda ronda de cambios
+
+- **Fix: marcas de calibración invisibles en los sliders.** El
+  `repeating-linear-gradient` del track tenía una coma faltante entre stops
+  (`transparent 1px transparent calc(5% - 1px)` en vez de dos stops
+  separados), lo que invalidaba toda la declaración `background` — no solo
+  las marcas, el track entero quedaba sin fondo propio. Se corrigió con la
+  sintaxis de "stop de dos posiciones" (`transparent 1px 5%`), y de paso se
+  agregó el mismo patrón al track de Firefox (`::-moz-range-track`), que
+  antes no tenía marcas en absoluto por diseño incompleto, no por el bug.
+- **Frecuencia, Resistencia R y Masa M ahora se pueden tipear directo**,
+  además de mover el slider. El campo numérico y el slider se sincronizan en
+  los dos sentidos y se clampean a los mismos límites (los `min`/`max` del
+  HTML son la única fuente de verdad, no hay números repetidos en el JS). El
+  campo no te pisa el texto mientras estás escribiendo un decimal (por
+  ejemplo "0.05" en Masa), solo se prolija el formato al perder el foco.
+- **Nueva sección "Fundamentos"** al pie de la página: qué se simula, las
+  ecuaciones (onda 1D, Helmholtz, Euler, impedancia de la muestra, Γ) y su
+  aplicación directa a la medición normalizada del coeficiente de absorción
+  (ISO 10534-1, método de relación de onda estacionaria — el mismo patrón
+  que dibuja este simulador — e ISO 10534-2:2023, técnica de dos
+  micrófonos). Las ecuaciones se renderizan con KaTeX vía CDN
+  (`cdn.jsdelivr.net/npm/katex`), sin build step.
+- **Nuevo nombre: ImpedanZ** (antes "Tubo de Kundt · Simulador 1D"), pensando
+  en que esto podría eventualmente integrarse con el resto de las páginas.
 
 ## Estructura
 
